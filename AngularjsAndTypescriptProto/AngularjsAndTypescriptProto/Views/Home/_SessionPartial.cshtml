@@ -1,0 +1,26 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="sessionItem">
+    <header>
+        <h4>{{session.Name}}
+            <br/>
+            <small>{{session.SessionDateTime | date:'medium'}}</small>
+        </h4>
+        
+    </header>
+    <div class="form-group">
+        <button ng-click="likeSession()" ng-disabled="!canLike()">Like</button>
+        <button>Attend</button>
+    </div>
+    <article>
+    <header>
+        <h6>Liked By...</h6>    
+    </header>
+    <ul>
+        <li class="list-unstyled" ng-repeat="userInfo in session.LikedByUsers">{{userInfo.Username}}</li>
+    </ul> 
+    </article>
+    <span ng-show="!session">No session data passed</span>
+</div>

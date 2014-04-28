@@ -1,0 +1,53 @@
+﻿@using AngularjsAndTypescriptProto.Helpers
+@model AngularjsAndTypescriptProto.Models.LoginModel
+
+@{
+    ViewBag.Title = "Log in";
+    Layout = null;
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+<section id="loginForm">
+<h2>Use a local account to log in.</h2>
+   
+    @* TODO Bootstrapify this *@
+    <form ng-submit="vm.submitLogin()" @Html.RequestVerificationToken()>
+        @Html.ValidationSummary(true)
+        <fieldset>
+            <legend>Log in Form</legend>
+       
+            <div class="form-group">
+                @Html.LabelFor(m => m.UserName, new { @class = "col-sm-2" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.UserName, new { ng_model="vm.UserName" })
+                    @Html.ValidationMessageFor(m => m.UserName)
+                </div>
+                
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Password, new { @class = "col-sm-2"})
+                <div class="col-sm-10">
+                    @Html.PasswordFor(m => m.Password, new { ng_model="vm.Password" })
+                    @Html.ValidationMessageFor(m => m.Password)
+                </div>
+                
+            </div>
+            <div class="form-group">
+                @Html.CheckBoxFor(m => m.RememberMe, new { ng_model="vm.RememberMe" })
+                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+            </div>
+            <input type="submit" value="Log in" />
+        </fieldset>
+        <p>
+            @Html.ActionLink("Register", "Register") if you don't have an account.
+        </p>
+    </form>
+</section>
+
+@*<section class="social" id="socialLoginForm">
+    <h2>Use another service to log in.</h2>
+    @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+</section>*@

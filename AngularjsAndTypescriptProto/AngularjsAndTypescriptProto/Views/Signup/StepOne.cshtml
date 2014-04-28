@@ -1,0 +1,22 @@
+﻿@{
+    Layout = null;
+}
+
+<form role="form" ng-submit="submitStepOne()" class="form-horizontal">
+    <div class="form-group">
+        <label for="emailAddress" class="col-sm-2">Email Address:</label>
+        <input class="col-sm-9" type="email" id="emailAddress" required="required"  ng-blur="validateModel($event)" ng-model="EmailAddress"/>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2" for="password">Password:</label>
+        <input class="col-sm-9" type="password" id="password" required="required" ng-blur="validateModel($event)" ng-model="Password"/>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2" for="confirmPassword">Confirm Password:</label>
+        <input class="col-sm-9" type="password" required="required" ng-model="ConfirmPassword" ng-blur="validateModel($event)" id="confirmPassword"/>
+    </div>
+    <button type="submit" ng-disabled="!isValid">Step Two</button>
+</form>
+<div class="well">
+    <alert ng-repeat="alert in alerts" type="alert.type">{{alert.message}}</alert>
+</div>

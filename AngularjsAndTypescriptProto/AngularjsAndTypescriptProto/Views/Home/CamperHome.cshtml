@@ -1,0 +1,30 @@
+﻿@using AngularjsAndTypescriptProto.Helpers
+@{
+    ViewBag.Title = "CamperHome";
+    Layout = null;
+}
+
+<h2>Hello Campers</h2>
+
+    <section ng-controller="sessionsController">
+        @if (Request.IsAuthenticated && User.IsInRole("Administrator"))
+    {
+        <div @Html.RequestVerificationToken()>
+            <button ng-click="vm.addSessionModal()">Add Session</button>
+        </div>
+        
+    }
+        <div ng-show="!vm || !vm.sessions || vm.sessions.length == 0">
+            No sessions here.
+        </div>
+        <div ng-repeat="session in vm.sessions">
+            <span ng-if="$index % 3 == 0">
+                <hr />
+                <div class="row">
+                    <div class="col-lg-3" ng-if="vm.sessions[$index+0]"><sessionitem like="vm.likeSession" principal="vm.sessions[$index+0].cp" session="vm.sessions[$index+0]"/></div>
+                    <div class="col-lg-3" ng-if="vm.sessions[$index+1]"><sessionitem like="vm.likeSession" principal="vm.sessions[$index+1].cp"  session="vm.sessions[$index+1]"/></div>
+                    <div class="col-lg-3" ng-if="vm.sessions[$index+2]"><sessionitem like="vm.likeSession" principal="vm.sessions[$index+2].cp" session="vm.sessions[$index+2]"/></div>
+                </div>
+            </span>
+        </div>
+    </section>

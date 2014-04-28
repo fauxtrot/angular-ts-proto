@@ -1,0 +1,33 @@
+﻿   
+    
+    /* login page */
+    #loginForm {
+        border-right: none;
+        float: none;
+        width: auto;
+    }
+
+        #loginForm .validation-error {
+            display: block;
+            margin-left: 15px;
+        }
+
+    #socialLoginForm {
+        margin-left: 0;
+        float: none;
+        width: auto;
+    }
+
+    .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+    div.sessionItem {
+        background-color: rgba(255, 255, 255, .5);
+        padding: .5em;
+        -moz-border-radius: 15px;
+        border-radius: 15px;
+    }
+    div.attending {
+        background-color: rgba(150, 255, 150, .5);
+    }
+ 
+/* END: Mobile Styles */

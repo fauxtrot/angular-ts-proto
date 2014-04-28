@@ -1,0 +1,28 @@
+﻿@{
+    Layout = null;
+}
+<section class="modal-body">
+    <h3>Hello Edit Sessions</h3>
+    <form ng-submit="saveSession()">
+        <div class="form-group">
+            <label for="sessionName">Session Name</label>
+            <input type="text" class="form-control" id="sessionName" ng-model="session.Name" ng-required="true"/>
+        </div>        
+        <div class="form-group">
+            <label for="sessionSpeaker">Speaker Name</label>
+            <input type="text" class="form-control" id="sessionSpeaker" ng-model="session.SpeakerName" ng-required="true"/>
+        </div>  
+        <div class="form-group"><!--ng-model="session.SessionDateTime" -->
+            <label for="sessionDate">Session Date and time</label>
+            <input type="text" id="sessionDate" datepicker-popup class="form-control" ng-model="session.SessionDate" ng-required="true"/> 
+            <span ng-model="session.SessionTime">
+                <timepicker minute-step="15"></timepicker>
+            </span>
+
+        </div>
+        <div class="form-group">
+             <button type="submit" class="btn btn-default">Save</button>
+             <button type="button" class="btn btn-default" ng-click="cancelModel()">Cancel</button>  
+        </div>
+    </form>
+</section>
