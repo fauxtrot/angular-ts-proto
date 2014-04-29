@@ -1,6 +1,9 @@
 Neo4JMembershipProvider
 =======================
 
+From: [https://github.com/coreyauger/Neo4JMembershipProvider](https://github.com/coreyauger/Neo4JMembershipProvider)
+I had to pull and make a few changes for my particular setup.
+
 asp.net Neo4J Membership Provider
 
 
