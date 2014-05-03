@@ -8,9 +8,9 @@
                 scope: {
                     session: '=',
                     likeSession: '&',
-                    principal: '&'
+                    principal: '='
                 },
-                templateUrl: "/Home/_SessionPartial",
+                templateUrl: "/Template/_SessionPartial",
                 controller: sessionControlController
             };
         };
@@ -20,26 +20,33 @@
 
     var sessionControlController = (function () {
         function sessionControlController($scope) {
-            this.checkLikeAbility = function (scope) {
-                var sess = scope.session;
-                var prin = scope.principal;
-                sess.LikedByUsers.forEach(function (ui) {
-                    if (prin.PrincipalType == 1 /* Anonymous */ || (ui.ProviderKey == prin.Id && ui.UserName == prin.Username)) {
+            this.checkLikeAbility = function () {
+                var sess = this.session;
+                var prin = this.principal;
+                for (var index in sess.LikedByUsers) {
+                    var ui = sess.LikedByUsers[index];
+                    if (prin.CurrentPrincipal.PrincipalType == 1 /* Anonymous */ || (ui.ProviderUserKey == prin.CurrentPrincipal.Id && ui.Username == prin.CurrentPrincipal.Username)) {
                         return false;
                     }
-                });
-
+                }
                 return true;
             };
-            $scope.likeSession = function () {
-                $scope.session.$like();
-            };
-            $scope.canLike = this.checkLikeAbility($scope);
+            $scope.vm = this;
+            this.session = $scope.session;
+            this.principal = $scope.principal;
 
-            $scope.$on('login::principalChanged', function () {
-                $scope.canLike = this.checkLikeAbility($scope);
-            });
+            this.canLike = this.checkLikeAbility();
+            var self = this;
+            this.onUpdateSession = function () {
+                $scope.$emit('session::updateSession', { session: this.session });
+            };
         }
+        sessionControlController.prototype.likeSession = function () {
+            var self = this;
+            this.session.$like().then(function () {
+                self.onUpdateSession();
+            });
+        };
         sessionControlController.$inejct = ['$scope', '$element', '$attrs', 'currentPrincipal', '$location'];
         return sessionControlController;
     })();

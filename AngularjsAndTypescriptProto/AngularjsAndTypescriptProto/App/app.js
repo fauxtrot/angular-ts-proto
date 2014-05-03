@@ -8,7 +8,7 @@ define(["require", "exports", 'Controllers/MainModule', 'Controllers/CamperHomeM
                 codeCamperApp.config([
                     '$routeProvider', function ($routeProvider) {
                         $routeProvider.when('/home', {
-                            templateUrl: '/Home/CamperHome',
+                            templateUrl: '/Template/CamperHome',
                             controller: 'camperHomeController'
                         }).when('/Login', {
                             templateUrl: '/Account/Login',
@@ -16,6 +16,9 @@ define(["require", "exports", 'Controllers/MainModule', 'Controllers/CamperHomeM
                         }).when('/manage', {
                             templateUrl: '/Account/Manage',
                             controller: null
+                        }).when('/sessionDetail/:id', {
+                            templateUrl: '/Template/SessionDetail',
+                            controller: 'sessionDetailController'
                         }).otherwise({ redirectTo: '/home' });
                     }]);
             };
@@ -24,6 +27,13 @@ define(["require", "exports", 'Controllers/MainModule', 'Controllers/CamperHomeM
                     '$http', function ($http) {
                         return function (scope, element, attrs) {
                             $http.defaults.headers.common['RequestVerificationToken'] = attrs.ncgRequestVerificationToken || "no reqeust verification token";
+                            scope.$on('login::principalChanged', function () {
+                                $http.defaults.headers.common['RequestVerificationToken'] = undefined;
+                                $http.get('/Home/GetVerificationToken', function (data) {
+                                    attrs.ncgRequestVerificationToken = data;
+                                    $http.defaults.headers.common['RequestVerificationToken'] = attrs.ncgRequestVerificationToken;
+                                });
+                            });
                         };
                     }]);
 
@@ -35,11 +45,11 @@ define(["require", "exports", 'Controllers/MainModule', 'Controllers/CamperHomeM
                 codeCamperApp.controller('testController', testModule.TestController);
                 codeCamperApp.controller('MainController', mainController.MainController);
                 codeCamperApp.controller('sessionsController', sessionModule.SessionController);
-                codeCamperApp.controller('camperHomeController', ['$scope', camperHome.CamperHomeController]);
+                codeCamperApp.controller('camperHomeController', ['$scope', camperHome.CamperHomeController]); //didn't really need a separate scope, so default injected here.
                 codeCamperApp.controller('SessionEditController', sessionModule.SessionEditController);
                 codeCamperApp.controller('LoginController', accountModule.LoginController);
                 codeCamperApp.controller('LoginPartialController', accountModule.LoginPartialController);
-
+                codeCamperApp.controller('sessionDetailController', sessionModule.SessionDetailController);
                 codeCamperApp.directive('sessionitem', function () {
                     return controls.sessionControl.Directive();
                 });
@@ -48,25 +58,38 @@ define(["require", "exports", 'Controllers/MainModule', 'Controllers/CamperHomeM
         BootStrapper.prototype.init = function () {
             var inj = angular.injector(['ng', 'ngResource']);
             var res = inj.get('$resource');
-
+            var rs = inj.get('$rootScope');
             var codeCamperApp = angular.module("CarolinaCodeCamperApp", ['ng', 'ngRoute', 'ngResource', 'ngSanitize', 'ui.bootstrap']);
             var self = this;
-            principalModule.PrincipalProviderService.GetResource(res).then(function (result) {
-                codeCamperApp.factory('currentPrincipal', [
-                    '$resource', function ($resource) {
+
+            codeCamperApp.service('cpSingleton', principalModule.PrincipalProviderService).factory('currentPrincipal', [
+                'cpSingleton',
+                function (cpSingleton) {
+                    return cpSingleton;
+                }]).factory('sessionResourceFactory', [
+                '$resource', function ($resource) {
+                    var retval = new sessionModule.SessionResourceFactory($resource);
+
+                    return retval.GetSessionResource();
+                }]).run([
+                'currentPrincipal',
+                function (ppsService) {
+                    var promise = ppsService.GetResource();
+                    console.log('calling Principal service load');
+                    promise.then(function (result) {
                         console.log('principal loaded...');
-                        self.buildCatalog(codeCamperApp);
+                    }, function (error) {
+                        console.log(error);
+                    });
+                }]);
 
-                        self.setupRouting(codeCamperApp);
-
-                        angular.bootstrap($(document), ['CarolinaCodeCamperApp']);
-
-                        return result;
-                    }]);
-                //codeCamperApp.run(['currentPrincipal', function (cp) { console.log(cp); }]);
-            }, function (error) {
-                console.log(error);
-            });
+            console.log('building catalog...');
+            self.buildCatalog(codeCamperApp);
+            console.log('building Routes....');
+            self.setupRouting(codeCamperApp);
+            console.log('finishing bootstrap!');
+            angular.bootstrap($(document), ['CarolinaCodeCamperApp']);
+            //this.pps = new principalModule.PrincipalProviderService(res, rs);
         };
         return BootStrapper;
     })();

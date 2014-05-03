@@ -9,9 +9,9 @@
 
     export class MainController {
 
-    static $inject = ['$scope', '$rootScope', '$location']
+    static $inject = ['$scope', '$rootScope', '$location', '$route']
 
-        constructor(public $scope: IMainControllerScope, $rootScope: ng.IRootScopeService, $location: ng.ILocationService) {
+        constructor(public $scope: IMainControllerScope, $rootScope: ng.IRootScopeService, $location: ng.ILocationService, $route: ng.route.IRouteService) {
             $scope.history = [];
             $scope.$on("$routeChangeSuccess", function (e, current, previous) {
                 $scope.activeViewPath = $location.path();

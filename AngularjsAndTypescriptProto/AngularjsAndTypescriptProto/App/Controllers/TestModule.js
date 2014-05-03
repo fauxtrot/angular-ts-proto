@@ -12,7 +12,7 @@
             this.scope.doAntiForgeryRequests = function () {
                 var token = window['AfToken'];
                 $http({
-                    withCredentials: true, url: '/home/SuperSecret', method: 'POST'
+                    withCredentials: true, url: '/Home/SuperSecret', method: 'POST'
                 }).success(_this.successCallback).error(function (err) {
                     console.log(err);
                 });

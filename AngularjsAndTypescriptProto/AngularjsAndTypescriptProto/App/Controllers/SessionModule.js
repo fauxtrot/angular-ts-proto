@@ -1,4 +1,15 @@
 ﻿define(["require", "exports"], function(require, exports) {
+    var SessionDetailController = (function () {
+        function SessionDetailController($scope, $routeParams, srf) {
+            $scope.vm = this;
+            var id = $routeParams.id;
+            this.session = srf.get({ id: id });
+        }
+        SessionDetailController.$inject = ['$scope', '$routeParams', 'sessionResourceFactory'];
+        return SessionDetailController;
+    })();
+    exports.SessionDetailController = SessionDetailController;
+
     var SessionEditController = (function () {
         function SessionEditController($scope, session) {
             $scope.vm = this;
@@ -16,20 +27,38 @@
     })();
     exports.SessionEditController = SessionEditController;
 
+    var SessionResourceFactory = (function () {
+        function SessionResourceFactory($resource) {
+            this._resource = $resource;
+        }
+        SessionResourceFactory.prototype.GetSessionResource = function () {
+            return this._resource('/api/Session/:id', { id: "@id" }, {
+                secureSave: { method: 'POST', headers: { 'Content-Type': 'application/json' }, withCredentials: true },
+                like: { method: 'POST', url: '/Home/LikeSession', headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+            });
+        };
+        SessionResourceFactory.$inject = ['$resource'];
+        return SessionResourceFactory;
+    })();
+    exports.SessionResourceFactory = SessionResourceFactory;
+
     var SessionController = (function () {
-        function SessionController($scope, $resource, $modal, currentPrincipal) {
+        function SessionController($scope, sessionResourceFactory, $modal, currentPrincipal) {
             var _this = this;
+            //likeSession(session: SessionObject): void {
+            //    session.$like();
+            //}
             this.addSessionModal = function () {
                 var sess = new _this.sessionResource();
                 var p = _this.cp;
                 var refresh = _this.refreshListFromServer;
-                var self = _this;
+                var local = _this;
                 var config = {
-                    templateUrl: '/Home/EditSessions',
+                    templateUrl: '/Template/EditSessions',
                     controller: 'SessionEditController',
                     resolve: {
                         session: function () {
-                            sess.SessionTime = self.fudgeMinutes(sess.SessionTime);
+                            sess.SessionTime = local.fudgeMinutes(sess.SessionTime);
                             return sess;
                         }
                     }
@@ -72,17 +101,18 @@
                 }
             };
             $scope.vm = this;
-            this.sessionResource = $resource('/api/Session/:id', { id: "@id" }, {
-                secureSave: { method: 'POST', headers: { 'Content-Type': 'application/json' }, withCredentials: true },
-                like: { method: 'POST', url: '/Home/LikeSession', headers: { 'Content-Type': 'application/json' }, withCredentials: true }
-            });
+            this.sessionResource = sessionResourceFactory;
             this.modal = $modal;
             this.refreshListFromServer();
+            this.cp = currentPrincipal;
+            var self = this;
+
+            $scope.$on('session::updateSession', function (session) {
+                console.log(session);
+                self.refreshListFromServer();
+            });
         }
-        SessionController.prototype.likeSession = function (session) {
-            session.$like();
-        };
-        SessionController.$inject = ['$scope', '$resource', '$modal', 'currentPrincipal'];
+        SessionController.$inject = ['$scope', 'sessionResourceFactory', '$modal', 'currentPrincipal'];
         return SessionController;
     })();
     exports.SessionController = SessionController;

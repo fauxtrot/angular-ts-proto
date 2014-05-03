@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "SessionDetail";
+    Layout = null;
+}
+
+<div  class="sessionItem">
+    <header>
+        <h2>{{vm.session.Name}}</h2>
+    </header>
+    <div>
+        <h4>Date</h4>
+        <small>{{vm.session.SessionDateTime | date:'short'}}</small>
+    </div>
+    <div>
+        <h4>Speaker</h4>
+        <small>{{vm.session.SpeakerName}}</small>
+    </div>
+    <div>
+        <h4>Description</h4>
+        <small>{{vm.session.Description}}</small>
+    </div>
+    <div>
+        <h4>Comments</h4>
+        <div ng-controller="commentController">
+            
+        </div>
+    </div>
+</div>

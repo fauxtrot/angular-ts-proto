@@ -25,11 +25,12 @@ namespace AngularjsAndTypescriptProto.Controllers
         }
         //"api/Session/{id}"
         // GET api/<controller>/5
-        public Session Get(string id)
+        public Session Get(long id)
         {
             ICamperDataAccess dal = new Neo4JCamperDataAccess();
             //return dal.GetSessionByPropertyValue("Username", id).FirstOrDefault();
-            return dal.GetSessionByPropertyValue("SessionName", id).FirstOrDefault();
+            var retval = dal.GetSessionById(id);
+            return retval;
         }
 
         // POST api/<controller>

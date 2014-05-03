@@ -1,4 +1,4 @@
 ﻿export interface UserInfo {
-    ProviderKey: number
+    ProviderUserKey: number
     UserName: string
 }

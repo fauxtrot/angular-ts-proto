@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Transactions;
 using System.Web;
+using System.Data.Entity;
 using System.Web.Mvc;
 using System.Web.Security;
-using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using AngularjsAndTypescriptProto.Filters;
@@ -338,6 +338,7 @@ namespace AngularjsAndTypescriptProto.Controllers
         }
 
         //PrincipalService
+        [AllowAnonymous]
         public JsonResult CurrentPrincipal()
         {
             var user = Membership.GetUser();
@@ -345,6 +346,7 @@ namespace AngularjsAndTypescriptProto.Controllers
             {
                 return Json(new object[] { new { PrincipalType = "Authenticated", Username = user.UserName, Id = user.ProviderUserKey} }, JsonRequestBehavior.AllowGet);
             }
+            return Json(new object[] { }, JsonRequestBehavior.AllowGet);
             return null;
         }
 

@@ -9,7 +9,7 @@ using Nextwave.Neo4J.Membership.Data;
 
 namespace DataAccess.Model.Relationships
 {
-    public class CreatedByRelationship: Relationship, IRelationshipAllowingSourceNode<Session>
+    public class CreatedByRelationship: Relationship, IRelationshipAllowingSourceNode<Session>, IRelationshipAllowingSourceNode<Comment>
     {
         public static readonly string TypeKey = "Created_By";
 

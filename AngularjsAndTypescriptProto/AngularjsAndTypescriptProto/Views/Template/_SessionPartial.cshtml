@@ -6,13 +6,13 @@
     <header>
         <h4>{{session.Name}}
             <br/>
-            <small>{{session.SessionDateTime | date:'medium'}}</small>
+            <small>{{sessionC | date:'medium'}}</small>
         </h4>
         
     </header>
     <div class="form-group">
-        <button ng-click="likeSession()" ng-disabled="!canLike()">Like</button>
-        <button>Attend</button>
+        <button ng-click="vm.likeSession()"  ng-class="{btn: true, disabled: !vm.canLike}">Like</button>
+        <a href="#/sessionDetail/{{session.Id}}" ng-class="{btn: true}">Details</a>
     </div>
     <article>
     <header>

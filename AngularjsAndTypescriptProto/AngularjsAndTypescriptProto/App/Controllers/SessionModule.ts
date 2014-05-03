@@ -1,6 +1,28 @@
 ﻿import userModule = require('Controllers/UserModule');
 
 
+export interface ISessionDetailScope extends ng.IScope {
+    vm: SessionDetailController
+}
+
+export interface ISessionDetailRouteParams extends ng.route.IRouteParamsService {
+    id: number;
+}
+
+export class SessionDetailController {
+
+    static $inject = ['$scope', '$routeParams', 'sessionResourceFactory']
+
+    session: SessionObject
+    isBusy: boolean;
+
+    constructor($scope: ISessionDetailScope, $routeParams: ISessionDetailRouteParams, srf: ng.resource.IResourceClass<SessionObject>) {
+        $scope.vm = this;
+        var id = $routeParams.id
+        this.session = srf.get({ id: id });
+    }
+}
+
 export interface IEditScope extends ng.IScope {
     session: SessionObject;
     saveSession: Function;
@@ -24,6 +46,25 @@ export class SessionEditController {
         $scope.cancelModal = () => {
             $scope.$dismiss();
         }
+    }
+}
+
+export class SessionResourceFactory {
+    static $inject = ['$resource']
+
+    private _resource: ng.resource.IResourceService;
+
+
+    constructor($resource: ng.resource.IResourceService) {
+        this._resource = $resource;
+    }
+
+    public GetSessionResource(): ng.resource.IResourceClass<SessionObject> {
+        return this._resource<SessionObject>('/api/Session/:id', { id: "@id" },
+            {
+                secureSave: { method: 'POST', headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+                , like: { method: 'POST', url: '/Home/LikeSession', headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+            });
     }
 }
 
@@ -54,7 +95,7 @@ export interface ISessionControllerScope extends ng.IScope {
 
 export class SessionController {
     
-    static $inject = ['$scope', '$resource', '$modal', 'currentPrincipal']
+    static $inject = ['$scope', 'sessionResourceFactory', '$modal', 'currentPrincipal']
 
     sessions: SessionObject[];
     //scope: ISessionControllerScope;
@@ -63,34 +104,37 @@ export class SessionController {
     cp: any;
 
 
-    constructor($scope: ISessionControllerScope, $resource: ng.resource.IResourceService, $modal: ng.ui.bootstrap.IModalService, currentPrincipal: any) {
+    constructor($scope: ISessionControllerScope, sessionResourceFactory: ng.resource.IResourceClass<SessionObject>, $modal: ng.ui.bootstrap.IModalService, currentPrincipal: any) {
 
         $scope.vm = this;
-        this.sessionResource = $resource<SessionObject>('/api/Session/:id', { id: "@id" },
-            {
-                secureSave: { method: 'POST', headers: { 'Content-Type': 'application/json' }, withCredentials: true }
-                ,like: { method: 'POST', url: '/Home/LikeSession', headers: {'Content-Type': 'application/json' }, withCredentials: true }
-            });
+        this.sessionResource = sessionResourceFactory;
         this.modal = $modal;
         this.refreshListFromServer();
+        this.cp = currentPrincipal;
+        var self = this;
+
+        $scope.$on('session::updateSession', function (session) {
+            console.log(session);
+            self.refreshListFromServer();
+        });
         
     }
 
-    likeSession(session: SessionObject): void {
-        session.$like();
-    }
+    //likeSession(session: SessionObject): void {
+    //    session.$like();
+    //}
 
     addSessionModal = () => {
         var sess = new this.sessionResource();
         var p = this.cp;
         var refresh = this.refreshListFromServer;
-        var self = this;
+        var local = this;
         var config = {
-            templateUrl: '/Home/EditSessions',
+            templateUrl: '/Template/EditSessions',
             controller: 'SessionEditController',
             resolve: {
                 session: function () {
-                    sess.SessionTime = self.fudgeMinutes(sess.SessionTime);
+                    sess.SessionTime = local.fudgeMinutes(sess.SessionTime);
                     return sess;
                 }
             }

@@ -1,5 +1,6 @@
 ﻿export interface ITestControllerScope extends ng.IScope {
     doAntiForgeryRequests: Function;
+    vm: TestController;
 } 
 
 export class TestController {
@@ -14,7 +15,7 @@ export class TestController {
         this.scope.doAntiForgeryRequests = () => {
             var token = window['AfToken'];
             $http({
-                withCredentials: true, url: '/home/SuperSecret', method: 'POST'
+                withCredentials: true, url: '/Home/SuperSecret', method: 'POST'
             }).success(this.successCallback).error(function (err) {
                 console.log(err);
             });

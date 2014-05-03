@@ -12,9 +12,9 @@ export class sessionControl {
             {
                 session: '=',
                 likeSession: '&',
-                principal: '&'
+                principal: '='
             },
-            templateUrl: "/Home/_SessionPartial"
+            templateUrl: "/Template/_SessionPartial"
             , controller: sessionControlController
         }
     }
@@ -24,33 +24,47 @@ export interface sessionControlScope extends ng.IScope {
     session: sessionModule.SessionObject
     principal: principalProvider.IPrincipal
     likeSession: Function;
-    canLike:boolean;
+    canLike: boolean;
+    vm: sessionControlController
 }
 
 export class sessionControlController {
     static $inejct = ['$scope', '$element', '$attrs', 'currentPrincipal', '$location']
+    session: sessionModule.SessionObject;
+    principal: principalProvider.IPrincipal;
+    canLike: boolean;
+    onUpdateSession: Function
 
     constructor($scope: sessionControlScope) {
-        $scope.likeSession = function () {
-            $scope.session.$like();
-        }
-        $scope.canLike = this.checkLikeAbility($scope);
+        $scope.vm = this;
+        this.session = $scope.session;
+        this.principal = $scope.principal;
 
-        $scope.$on('login::principalChanged', function () {
-            $scope.canLike = this.checkLikeAbility($scope);
-        });
+        this.canLike = this.checkLikeAbility();
+        var self = this;
+        this.onUpdateSession = function () {
+            $scope.$emit('session::updateSession', { session: this.session });
+        }
     }
 
-    checkLikeAbility = function (scope: sessionControlScope): boolean {
-        var sess = scope.session;
-        var prin = scope.principal;
-        sess.LikedByUsers.forEach(function (ui: userModule.UserInfo) {
-            if (prin.PrincipalType == principalProvider.PrincipalTypes.Anonymous || (ui.ProviderKey == prin.Id && ui.UserName == prin.Username)) {
+    likeSession() {
+        var self = this;
+        this.session.$like().then(function () {
+            self.onUpdateSession();
+        });
+        
+    }
+
+
+    checkLikeAbility = function (): boolean {
+        var sess = this.session;
+        var prin = this.principal;
+        for (var index in sess.LikedByUsers) {
+            var ui = sess.LikedByUsers[index];
+            if (prin.CurrentPrincipal.PrincipalType == principalProvider.PrincipalTypes.Anonymous || (ui.ProviderUserKey == prin.CurrentPrincipal.Id && ui.Username == prin.CurrentPrincipal.Username)) {
                 return false;
             }
-        });
-
+        }
         return true;
     }
-
 }

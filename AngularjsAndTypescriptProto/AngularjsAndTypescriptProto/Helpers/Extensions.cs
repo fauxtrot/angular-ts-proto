@@ -17,7 +17,7 @@ namespace AngularjsAndTypescriptProto.Helpers
             return String.Format("ncg-request-verification-token={0}", GetTokenHeaderValue());
         }
 
-        private static string GetTokenHeaderValue()
+        internal static string GetTokenHeaderValue()
         {
             string cookieToken, formToken;
             System.Web.Helpers.AntiForgery.GetTokens(null, out cookieToken, out formToken);

@@ -19,15 +19,20 @@ export class LoginController {
     http: ng.IHttpService;
     rootScope: ng.IRootScopeService;
     location: ng.ILocationService;
+    timeout: ng.ITimeoutService
+    window: ng.IWindowService
+    scope: ng.IScope
 
+    static $inject = ['$scope', '$rootScope', '$http', '$location', '$route', '$timeout', '$window']
 
-    static $inject = ['$scope', '$rootScope', '$http', '$location']
-
-    constructor($scope: LoginScope, $rootScope: ng.IRootScopeService, $http: ng.IHttpService, $location: ng.ILocationService) {
+    constructor($scope: LoginScope, $rootScope: ng.IRootScopeService, $http: ng.IHttpService, $location: ng.ILocationService, $timeout: ng.ITimeoutService, $window: ng.IWindowService) {
         $scope.vm = this;
         this.http = $http;
         this.rootScope = $rootScope;
         this.location = $location;
+        this.timeout = $timeout;
+        this.window = $window;
+        this.scope = $scope;
     }
 
     submitLogin = () => {
@@ -36,7 +41,7 @@ export class LoginController {
         promise.success(function (data, status, headers, config) {
             if (data.returnUrl) {
                 self.location.path(data.returnUrl)
-                    self.rootScope.$broadcast('login::principalChanged', null);
+                self.scope.$emit('login::principalChanged', null);              
             }
             else if (data.error) {
                 console.log(data.error);
@@ -49,27 +54,27 @@ export class LoginController {
 
 
 export class LoginPartialController {
-    static $inject = ['$scope', '$sanitize', '$sce', '$http']
+    static $inject = ['$scope', '$rootScope','$sanitize', '$sce', '$http']
     http: ng.IHttpService;
     sce: any;
     sanitize: ng.sanitize.ISanitizeService;
     self: any;
 
-    constructor($scope: ILoginPartialScope, $sanitize: ng.sanitize.ISanitizeService, $sce: any, $http: ng.IHttpService) {
+    constructor($scope: ILoginPartialScope, $rootScope: ng.IRootScopeService, $sanitize: ng.sanitize.ISanitizeService, $sce: any, $http: ng.IHttpService) {
         $scope.vm = this;
 
         this.http = $http;
         this.sce = $sce;
         this.refreshData();
         var ref = this;
-        $scope.$on('login::principalChanged', function () {
+        $rootScope.$on('login::principalChanged', function () {
             ref.refreshData();
         });
     }
 
     refreshData = function () {
         var self = this;
-        this.http.get('/Home/_LoginPartial').success(function (data) {
+        this.http.get('/Template/_LoginPartial').success(function (data) {
             self.template = self.sce.trustAsHtml(data);
         })
     }

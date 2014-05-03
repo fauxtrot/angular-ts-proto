@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using AngularjsAndTypescriptProto.Helpers
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -55,7 +56,7 @@
         <!-- /.container-fluid -->
     </nav>
 
-    <div class="container">
+    <div class="container" @Html.RequestVerificationToken()>
 
         @RenderBody()
 
@@ -79,7 +80,7 @@
         $(document).ready(function() {
             setTimeout(function() {
                 $debug = angular.injector(['CarolinaCodeCamperApp']);
-            }, 10000);
+            }, 3000);
         });
     </script>
 #endif

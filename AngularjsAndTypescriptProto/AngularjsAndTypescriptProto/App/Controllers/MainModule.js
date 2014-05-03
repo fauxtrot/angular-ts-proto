@@ -1,6 +1,6 @@
 ﻿define(["require", "exports"], function(require, exports) {
     var MainController = (function () {
-        function MainController($scope, $rootScope, $location) {
+        function MainController($scope, $rootScope, $location, $route) {
             this.$scope = $scope;
             $scope.history = [];
             $scope.$on("$routeChangeSuccess", function (e, current, previous) {
@@ -23,7 +23,7 @@
             };
             $scope.isBusy = false;
         }
-        MainController.$inject = ['$scope', '$rootScope', '$location'];
+        MainController.$inject = ['$scope', '$rootScope', '$location', '$route'];
         return MainController;
     })();
     exports.MainController = MainController;

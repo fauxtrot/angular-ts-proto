@@ -1,4 +1,6 @@
-﻿export enum PrincipalTypes {
+﻿///<reference path="../../Scripts/typings/angularjs/angular-resource.d.ts"/>
+
+export enum PrincipalTypes {
     Authenticated,
     Anonymous
 }
@@ -10,27 +12,37 @@ export interface IPrincipal {
 } 
 
 export class PrincipalProviderService {
-    static $inject = ['$resource']
-
-    static Anonymous  = { PrincipalType: PrincipalTypes.Anonymous, Username: 'Anonymous' };
+    static $inject = ['$resource', '$rootScope']
+    static Anonymous  = { PrincipalType: PrincipalTypes.Anonymous, Username: 'Anonymous', Id : -1 };
 
     resource: ng.resource.IResourceService
+    rootScope: ng.IRootScopeService
 
-    constructor($resource: ng.resource.IResourceService) {
+    constructor($resource: ng.resource.IResourceService, $rootScope: ng.IRootScopeService) {
         this.resource = $resource;
+        this.rootScope = $rootScope;
+        var self = this;
+        $rootScope.$on('login::principalChanged', function () {
+            self.GetResource();
+            console.log('new Principal');
+        });
     }
 
-    private static _currentPrincipal: IPrincipal;
+    private _currentPrincipal: IPrincipal;
 
-    public static get CurrentPrincipal(): IPrincipal {
-        return PrincipalProviderService._currentPrincipal;
+    public get CurrentPrincipal(): IPrincipal {
+        return this._currentPrincipal;
     }
 
-    public static GetResource($resource: ng.resource.IResourceService): ng.IPromise<IPrincipal> {
-        var service = $resource<IPrincipal>('/Account/CurrentPrincipal');
+    public GetResource(): ng.IPromise<IPrincipal> {
+        var self = this;
+        var service = this.resource<IPrincipal>('/Account/CurrentPrincipal');
         return service.query().$promise.then(function (result: IPrincipal[]) {
-            PrincipalProviderService._currentPrincipal = result[0];
-            return PrincipalProviderService._currentPrincipal;
+            if (result[0] == null)
+                self._currentPrincipal = PrincipalProviderService.Anonymous;
+            else
+                self._currentPrincipal = result[0];
+            return self._currentPrincipal;
         });
     }
 }

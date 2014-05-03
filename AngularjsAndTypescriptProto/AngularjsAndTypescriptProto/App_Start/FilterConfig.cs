@@ -24,7 +24,7 @@ namespace AngularjsAndTypescriptProto
 
             IEnumerable<string> tokenHeaders =
                 filterContext.RequestContext.HttpContext.Request.Headers.GetValues("RequestVerificationToken");
-            if (tokenHeaders != null)
+            if (tokenHeaders != null && tokenHeaders.Count() == 2)
             {
                 string[] tokens = tokenHeaders.First().Split(':');
                 if (tokens.Length == 2)

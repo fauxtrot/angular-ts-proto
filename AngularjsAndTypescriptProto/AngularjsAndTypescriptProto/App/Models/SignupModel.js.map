@@ -1,1 +1,0 @@
-{"version":3,"file":"SignupModel.js","sourceRoot":"","sources":["SignupModel.ts"],"names":["SignupModel","SignupModel.constructor","Model","Model.constructor"],"mappings":"AAAA;IAAA;QAAAA;QAEAC,CAACA;AAAAD,QAADA,mBAACA;IAADA,CAACA,IAAA;IAFD,kCAEC;;IAOD;QAAAE;YAKIC,KAAOA,iBAAiBA,GAAGA,UAACA,mBAA2BA;YAEvDA,CAACA,CAAAA;QACLA,CAACA;AAAAD,QAADA,aAACA;IAADA,CAACA,IAAA;IARD,sBAQC;GAAA"}

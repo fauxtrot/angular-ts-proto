@@ -43,16 +43,18 @@ namespace CarolinaCodeCamperApp.Controllers
             
         }
 
-        protected override void HandleUnknownAction(string actionName)
-        {
-            this.View(actionName).ExecuteResult(ControllerContext);
-        }
-
+       
         [System.Web.Mvc.Authorize]
         [AntiForgeryValidate]
         public ActionResult SuperSecret()
         {
             return Json(new {result = "success"}, JsonRequestBehavior.AllowGet);
+        }
+
+        [System.Web.Mvc.HttpGet]
+        public string GetVerificationToken()
+        {
+            return AngularjsAndTypescriptProto.Helpers.AntiForgeryExtension.GetTokenHeaderValue();
         }
 
     }

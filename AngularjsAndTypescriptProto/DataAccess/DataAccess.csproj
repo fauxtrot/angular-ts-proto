@@ -57,10 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ICamperDataAccess.cs" />
-    <Compile Include="Model\Interfaces.cs" />
+    <Compile Include="Model\Comment.cs" />
     <Compile Include="Model\Relationships\AttendedBy.cs" />
     <Compile Include="Model\Relationships\CreatedByRelationship.cs" />
     <Compile Include="Model\Relationships\LikedBy.cs" />
+    <Compile Include="Model\Relationships\OnSession.cs" />
     <Compile Include="Model\Session.cs" />
     <Compile Include="Model\UserInfo.cs" />
     <Compile Include="Neo4JCamperDataAccess.cs" />

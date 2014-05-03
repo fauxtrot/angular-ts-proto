@@ -10,5 +10,6 @@ namespace DataAccess.Model
     {
         public string Username { get; set; }
         public long ProviderUserKey { get; set; }
+        public int NodeId { get; set; }
     }
 }

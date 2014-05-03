@@ -11,8 +11,10 @@ namespace DataAccess
     public interface ICamperDataAccess
     {
         IEnumerable<Session> GetSessions();
-        IEnumerable<Session> GetSessionByPropertyValue(string propertyName, string value);
+        Session GetSessionById(long id);
         void AddSession(Session session, long userKey);
         void LikeSession(Session session, int id);
+        IEnumerable<Comment> GetCommentsForSession(int id);
+        void AddCommentToSession(Session session, int id, Comment comment);
     }
 }

@@ -73,6 +73,12 @@
       <HintPath>..\packages\DotNetOpenAuth.OpenId.RelyingParty.4.3.4.13329\lib\net45-full\DotNetOpenAuth.OpenId.RelyingParty.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -189,12 +195,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ModuleController.cs" />
     <Compile Include="Controllers\SessionController.cs">
       <SubType>
       </SubType>
     </Compile>
+    <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -205,10 +212,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="App\Controllers\commentModule.ts" />
+    <Content Include="Views\Template\SessionDetail.cshtml" />
     <TypeScriptCompile Include="App\Services\PrincipalProvider.ts" />
-    <Content Include="Views\Home\_SessionPartial.cshtml" />
+    <Content Include="Views\Template\_SessionPartial.cshtml" />
     <TypeScriptCompile Include="App\Directive\sessionControl.ts" />
-    <Content Include="Views\Home\_LoginPartial.cshtml" />
+    <Content Include="Views\Template\_LoginPartial.cshtml" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-bootstrap-ui.d.ts" />
     <TypeScriptCompile Include="App\Controllers\AccountModule.ts" />
     <Content Include="Views\Home\Test.cshtml" />
@@ -243,8 +252,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Scripts\jquery-ui-1.10.4.js" />
     <Content Include="Scripts\jquery-ui-1.10.4.min.js" />
-    <Content Include="Views\Home\EditSessions.cshtml" />
-    <TypeScriptCompile Include="App\Models\SignupModel.ts" />
+    <Content Include="Views\Template\EditSessions.cshtml" />
     <TypeScriptCompile Include="App\Controllers\SessionModule.ts" />
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />
@@ -544,10 +552,9 @@
     <Content Include="Scripts\ui-bootstrap-0.10.0.min.js" />
     <Content Include="Scripts\ui-bootstrap-tpls-0.10.0.js" />
     <Content Include="Scripts\ui-bootstrap-tpls-0.10.0.min.js" />
-    <Content Include="Views\Home\CamperHome.cshtml" />
+    <Content Include="Views\Template\CamperHome.cshtml" />
     <Content Include="Views\Signup\StepOne.cshtml" />
     <Content Include="Scripts\version.json" />
-    <TypeScriptCompile Include="App\Services\SignUpValidationService.ts" />
     <TypeScriptCompile Include="App\Controllers\CamperHomeModule.ts" />
     <TypeScriptCompile Include="App\Controllers\MainModule.ts" />
     <TypeScriptCompile Include="App\Controllers\UserModule.ts" />
@@ -625,8 +632,6 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
@@ -669,9 +674,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>49926</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56333/</IISUrl>
+          <IISUrl>http://localhost:56555/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
