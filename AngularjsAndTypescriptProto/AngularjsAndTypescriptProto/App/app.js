@@ -62,10 +62,9 @@ define(["require", "exports", 'Controllers/MainModule', 'Controllers/CamperHomeM
             var codeCamperApp = angular.module("CarolinaCodeCamperApp", ['ng', 'ngRoute', 'ngResource', 'ngSanitize', 'ui.bootstrap']);
             var self = this;
 
-            codeCamperApp.service('cpSingleton', principalModule.PrincipalProviderService).factory('currentPrincipal', [
-                'cpSingleton',
-                function (cpSingleton) {
-                    return cpSingleton;
+            codeCamperApp.service('currentPrincipal', [
+                '$resource', '$rootScope', function cpSingletonService($resource, $rootScope) {
+                    return principalModule.PrincipalProviderService.getInstance($resource, $rootScope);
                 }]).factory('sessionResourceFactory', [
                 '$resource', function ($resource) {
                     var retval = new sessionModule.SessionResourceFactory($resource);

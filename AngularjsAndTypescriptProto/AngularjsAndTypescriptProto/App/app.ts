@@ -33,22 +33,23 @@ class BootStrapper {
         var self = this;
 
         codeCamperApp
-            .service('cpSingleton', principalModule.PrincipalProviderService)
-            .factory('currentPrincipal', ['cpSingleton',
-            function (cpSingleton) { 
-                return cpSingleton; //new principalModule.PrincipalProviderService($resource, $rootScope)
-            }])      .factory('sessionResourceFactory', ['$resource', function ($resource: ng.resource.IResourceService) {
+            .service('currentPrincipal', ['$resource', '$rootScope',  function cpSingletonService($resource: ng.resource.IResourceService, $rootScope: ng.IRootScopeService) {
+                return principalModule.PrincipalProviderService.getInstance($resource, $rootScope);                
+            }])
+            .factory('sessionResourceFactory', ['$resource', function ($resource: ng.resource.IResourceService) {
                 var retval = new sessionModule.SessionResourceFactory($resource);
 
                 return retval.GetSessionResource();
-            }])      .run(['currentPrincipal',
+            }])
+
+            .run(['currentPrincipal',
             function (ppsService: principalModule.PrincipalProviderService) {
                 var promise = ppsService.GetResource();
                 console.log('calling Principal service load');
                 promise.then(function (result) {
                     console.log('principal loaded...');
                 }, function (error) { console.log(error); });
-        }]);
+            }]);
               
 
         console.log('building catalog...');

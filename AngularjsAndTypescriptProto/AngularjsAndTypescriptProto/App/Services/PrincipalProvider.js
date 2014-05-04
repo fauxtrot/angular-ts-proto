@@ -16,6 +16,12 @@ define(["require", "exports"], function(require, exports) {
                 console.log('new Principal');
             });
         }
+        PrincipalProviderService.getInstance = function ($resource, $rootScope) {
+            if (PrincipalProviderService._instance == null)
+                PrincipalProviderService._instance = new PrincipalProviderService($resource, $rootScope);
+            return PrincipalProviderService._instance;
+        };
+
         Object.defineProperty(PrincipalProviderService.prototype, "CurrentPrincipal", {
             get: function () {
                 return this._currentPrincipal;
@@ -37,6 +43,7 @@ define(["require", "exports"], function(require, exports) {
         };
         PrincipalProviderService.$inject = ['$resource', '$rootScope'];
         PrincipalProviderService.Anonymous = { PrincipalType: 1 /* Anonymous */, Username: 'Anonymous', Id: -1 };
+        PrincipalProviderService._instance = null;
         return PrincipalProviderService;
     })();
     exports.PrincipalProviderService = PrincipalProviderService;

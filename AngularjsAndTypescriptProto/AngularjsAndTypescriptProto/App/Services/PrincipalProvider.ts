@@ -14,7 +14,7 @@ export interface IPrincipal {
 export class PrincipalProviderService {
     static $inject = ['$resource', '$rootScope']
     static Anonymous  = { PrincipalType: PrincipalTypes.Anonymous, Username: 'Anonymous', Id : -1 };
-
+    private static _instance: PrincipalProviderService = null;
     resource: ng.resource.IResourceService
     rootScope: ng.IRootScopeService
 
@@ -26,6 +26,12 @@ export class PrincipalProviderService {
             self.GetResource();
             console.log('new Principal');
         });
+    }
+
+    public static getInstance($resource: ng.resource.IResourceService, $rootScope: ng.IRootScopeService): PrincipalProviderService {
+        if(PrincipalProviderService._instance == null)
+            PrincipalProviderService._instance = new PrincipalProviderService($resource, $rootScope);
+        return PrincipalProviderService._instance;
     }
 
     private _currentPrincipal: IPrincipal;
@@ -44,5 +50,6 @@ export class PrincipalProviderService {
                 self._currentPrincipal = result[0];
             return self._currentPrincipal;
         });
+        
     }
 }
