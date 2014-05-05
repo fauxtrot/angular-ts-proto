@@ -1,8 +1,16 @@
-﻿define(["require", "exports"], function(require, exports) {
+﻿///<reference path="SessionModule.ts" />
+define(["require", "exports"], function(require, exports) {
     var CommentController = (function () {
-        function CommentController($scope) {
+        function CommentController($scope, crf) {
+            $scope.vm = this;
+            this.crf = crf;
+            this.isBusy = true;
+            this.getComments($scope.$parent.id);
         }
-        CommentController.$inject = ['$scope'];
+        CommentController.prototype.getComments = function (sessionId) {
+            this.comments = this.crf.query({ id: sessionId });
+        };
+        CommentController.$inject = ['$scope', 'commentResourceFactory'];
         return CommentController;
     })();
     exports.CommentController = CommentController;

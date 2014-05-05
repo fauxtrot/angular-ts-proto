@@ -17,8 +17,10 @@ define(["require", "exports"], function(require, exports) {
             });
         }
         PrincipalProviderService.getInstance = function ($resource, $rootScope) {
-            if (PrincipalProviderService._instance == null)
+            if (PrincipalProviderService._instance == null) {
                 PrincipalProviderService._instance = new PrincipalProviderService($resource, $rootScope);
+                PrincipalProviderService._instance._currentPrincipal = PrincipalProviderService._instance.GetResource();
+            }
             return PrincipalProviderService._instance;
         };
 
@@ -32,12 +34,14 @@ define(["require", "exports"], function(require, exports) {
 
         PrincipalProviderService.prototype.GetResource = function () {
             var self = this;
+            console.log('loading Principal');
             var service = this.resource('/Account/CurrentPrincipal');
             return service.query().$promise.then(function (result) {
+                console.log('principal loaded');
                 if (result[0] == null)
-                    self._currentPrincipal = PrincipalProviderService.Anonymous;
+                    return PrincipalProviderService.Anonymous;
                 else
-                    self._currentPrincipal = result[0];
+                    return result[0];
                 return self._currentPrincipal;
             });
         };

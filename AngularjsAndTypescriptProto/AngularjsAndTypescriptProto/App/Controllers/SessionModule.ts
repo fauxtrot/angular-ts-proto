@@ -3,6 +3,7 @@
 
 export interface ISessionDetailScope extends ng.IScope {
     vm: SessionDetailController
+    id: number
 }
 
 export interface ISessionDetailRouteParams extends ng.route.IRouteParamsService {
@@ -19,6 +20,7 @@ export class SessionDetailController {
     constructor($scope: ISessionDetailScope, $routeParams: ISessionDetailRouteParams, srf: ng.resource.IResourceClass<SessionObject>) {
         $scope.vm = this;
         var id = $routeParams.id
+        $scope.id = id;
         this.session = srf.get({ id: id });
     }
 }
@@ -119,10 +121,6 @@ export class SessionController {
         });
         
     }
-
-    //likeSession(session: SessionObject): void {
-    //    session.$like();
-    //}
 
     addSessionModal = () => {
         var sess = new this.sessionResource();

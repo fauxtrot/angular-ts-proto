@@ -17,6 +17,8 @@ import accountModule = require('Controllers/AccountModule');
 import controls = require('Directive/sessionControl');
 import userModle = require('Controllers/UserModule');
 import principalModule = require('Services/PrincipalProvider');
+import commentModule = require('Controllers/commentModule');
+import coreDirectives = require('Directive/coreDirectives');
 
 interface ICCAppRootScope extends ng.IRootScopeService {
     principal: principalModule.IPrincipal;
@@ -29,31 +31,26 @@ class BootStrapper {
         var inj = angular.injector(['ng', 'ngResource']);
         var res = inj.get('$resource');
         var rs = inj.get('$rootScope');
+        var qService = inj.get('$q');
         var codeCamperApp = angular.module("CarolinaCodeCamperApp", ['ng', 'ngRoute', 'ngResource', 'ngSanitize', 'ui.bootstrap']);
         var self = this;
 
         codeCamperApp
-            .service('currentPrincipal', ['$resource', '$rootScope',  function cpSingletonService($resource: ng.resource.IResourceService, $rootScope: ng.IRootScopeService) {
-                return principalModule.PrincipalProviderService.getInstance($resource, $rootScope);                
+            .service('currentPrincipal', ['$resource', '$rootScope', function cpSingletonService($resource: ng.resource.IResourceService, $rootScope: ng.IRootScopeService) {
+                return principalModule.PrincipalProviderService.getInstance($resource, $rootScope);
             }])
             .factory('sessionResourceFactory', ['$resource', function ($resource: ng.resource.IResourceService) {
                 var retval = new sessionModule.SessionResourceFactory($resource);
 
                 return retval.GetSessionResource();
             }])
-
-            .run(['currentPrincipal',
-            function (ppsService: principalModule.PrincipalProviderService) {
-                var promise = ppsService.GetResource();
-                console.log('calling Principal service load');
-                promise.then(function (result) {
-                    console.log('principal loaded...');
-                }, function (error) { console.log(error); });
+            .factory('commentResourceFactory', ['$resource', function ($resource: ng.resource.IResourceService) {
+                var retval = new commentModule.CommentResourceFactory($resource);
+                return retval.GetCommentResourceService();
             }]);
-              
-
+        
         console.log('building catalog...');
-        self.buildCatalog(codeCamperApp);
+        self.buildCatalog(codeCamperApp, qService);
         console.log('building Routes....');
         self.setupRouting(codeCamperApp);
         console.log('finishing bootstrap!');
@@ -86,7 +83,7 @@ class BootStrapper {
         }]);
     }
 
-    private buildCatalog = function (codeCamperApp: ng.IModule) {
+    private buildCatalog = function (codeCamperApp: ng.IModule, qService: ng.IQService) {
 
         codeCamperApp.directive('ncgRequestVerificationToken', ['$http', function ($http: ng.IHttpService) {
             return function (scope: ng.IScope, element, attrs) {
@@ -101,6 +98,8 @@ class BootStrapper {
             }
         }]);
 
+        codeCamperApp.directive('ngDynamicContent',  coreDirectives.DynamicContent.Directive);
+
 
         //patterns explained:
         // controller(name, module.controllerclass) -- calls this without any injection
@@ -111,12 +110,14 @@ class BootStrapper {
         codeCamperApp.controller('testController', testModule.TestController);
         codeCamperApp.controller('MainController', mainController.MainController);
         codeCamperApp.controller('sessionsController', sessionModule.SessionController);
-        codeCamperApp.controller('camperHomeController', ['$scope', camperHome.CamperHomeController]); //didn't really need a separate scope, so default injected here.
+        codeCamperApp.controller('camperHomeController', camperHome.CamperHomeController);
         codeCamperApp.controller('SessionEditController', sessionModule.SessionEditController);
         codeCamperApp.controller('LoginController', accountModule.LoginController);
         codeCamperApp.controller('LoginPartialController', accountModule.LoginPartialController);
         codeCamperApp.controller('sessionDetailController', sessionModule.SessionDetailController);
-        codeCamperApp.directive('sessionitem', function () { return controls.sessionControl.Directive(); });
+        codeCamperApp.controller('commentController', commentModule.CommentController);
+
+        codeCamperApp.directive('sessionitem', function () { return controls.sessionControl.Directive(qService); });
 
     };
 

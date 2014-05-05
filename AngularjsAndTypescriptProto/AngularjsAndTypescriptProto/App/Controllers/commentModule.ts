@@ -1,4 +1,7 @@
-﻿import userModule = require('Controllers/UserModule')
+﻿///<reference path="SessionModule.ts" />
+
+import userModule = require('Controllers/UserModule');
+import sessionModule = require('Controllers/SessionModule');
 
 export interface CommentObject extends ng.resource.IResourceClass<CommentObject>{
     Subject: string
@@ -12,14 +15,29 @@ export interface CommentObject extends ng.resource.IResourceClass<CommentObject>
 }
 
 export interface ICommentControllerScope {
-    
+    vm: CommentController;
+    $parent: sessionModule.ISessionDetailScope;
 }
 
 export class CommentController {
-    static $inject = ['$scope']
+    static $inject = ['$scope', 'commentResourceFactory']
 
-    constructor($scope: ICommentControllerScope) {
+    comments: Array<CommentObject>;
+    crf: ng.resource.IResourceClass<CommentObject>;
+
+    isBusy: boolean;
+    constructor($scope: ICommentControllerScope, crf: ng.resource.IResourceClass<CommentObject>) {
+        $scope.vm = this;
+        this.crf = crf;
+        this.isBusy = true;
+        this.getComments($scope.$parent.id);
     }
+
+    getComments(sessionId:number): void {
+        this.comments = this.crf.query({ id: sessionId }); 
+    }
+
+
 } 
 
 export class CommentResourceFactory {

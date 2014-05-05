@@ -212,6 +212,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="App\Directive\coreDirectives.ts" />
+    <Content Include="Views\Template\AddSessionButton.cshtml" />
     <TypeScriptCompile Include="App\Controllers\commentModule.ts" />
     <Content Include="Views\Template\SessionDetail.cshtml" />
     <TypeScriptCompile Include="App\Services\PrincipalProvider.ts" />

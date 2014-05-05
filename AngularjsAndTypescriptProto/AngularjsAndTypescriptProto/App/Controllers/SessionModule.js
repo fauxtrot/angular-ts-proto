@@ -3,6 +3,7 @@
         function SessionDetailController($scope, $routeParams, srf) {
             $scope.vm = this;
             var id = $routeParams.id;
+            $scope.id = id;
             this.session = srf.get({ id: id });
         }
         SessionDetailController.$inject = ['$scope', '$routeParams', 'sessionResourceFactory'];
@@ -45,9 +46,6 @@
     var SessionController = (function () {
         function SessionController($scope, sessionResourceFactory, $modal, currentPrincipal) {
             var _this = this;
-            //likeSession(session: SessionObject): void {
-            //    session.$like();
-            //}
             this.addSessionModal = function () {
                 var sess = new _this.sessionResource();
                 var p = _this.cp;

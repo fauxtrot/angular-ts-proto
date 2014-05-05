@@ -16,6 +16,13 @@ namespace AngularjsAndTypescriptProto
                routeTemplate: "api/Session/{id}",
                defaults: new { controller = "Session" , id = RouteParameter.Optional }
             );
+
+            config.Routes.MapHttpRoute(
+               name: "CommentApi",
+               routeTemplate: "api/Comment/{id}",
+               defaults: new { controller = "Comment", id = RouteParameter.Optional }
+            );
+
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
 
             // Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.

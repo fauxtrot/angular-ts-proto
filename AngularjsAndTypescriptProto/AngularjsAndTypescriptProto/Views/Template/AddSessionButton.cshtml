@@ -1,0 +1,8 @@
+﻿@{
+    ViewBag.Title = "AddSessionButton";
+    Layout = null;
+}
+ @if (Request.IsAuthenticated && User.IsInRole("Administrator"))
+ {
+<button ng-click="vm.addSessionModal()">Add Session</button>
+ }

@@ -29,25 +29,29 @@ export class PrincipalProviderService {
     }
 
     public static getInstance($resource: ng.resource.IResourceService, $rootScope: ng.IRootScopeService): PrincipalProviderService {
-        if(PrincipalProviderService._instance == null)
+        if (PrincipalProviderService._instance == null) {
             PrincipalProviderService._instance = new PrincipalProviderService($resource, $rootScope);
+            PrincipalProviderService._instance._currentPrincipal = PrincipalProviderService._instance.GetResource();
+        }
         return PrincipalProviderService._instance;
     }
 
-    private _currentPrincipal: IPrincipal;
+    private _currentPrincipal: any;
 
     public get CurrentPrincipal(): IPrincipal {
         return this._currentPrincipal;
     }
-
+    
     public GetResource(): ng.IPromise<IPrincipal> {
         var self = this;
+        console.log('loading Principal');
         var service = this.resource<IPrincipal>('/Account/CurrentPrincipal');
         return service.query().$promise.then(function (result: IPrincipal[]) {
+            console.log('principal loaded');
             if (result[0] == null)
-                self._currentPrincipal = PrincipalProviderService.Anonymous;
+                return PrincipalProviderService.Anonymous;
             else
-                self._currentPrincipal = result[0];
+                return result[0];
             return self._currentPrincipal;
         });
         

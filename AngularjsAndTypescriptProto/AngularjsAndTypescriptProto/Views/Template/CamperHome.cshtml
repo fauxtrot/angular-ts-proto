@@ -7,13 +7,10 @@
 <h2>Hello Campers</h2>
 
     <section ng-controller="sessionsController">
-        @if (Request.IsAuthenticated && User.IsInRole("Administrator"))
-    {
-        <div>
-            <button ng-click="vm.addSessionModal()">Add Session</button>
+       
+  
+        <div ng-dynamic-content='@Html.Raw(ViewData["AddSessionButton"])' events="login::principalChanged" templateHome="/Template/">
         </div>
-        
-    }
         <div ng-show="!vm || !vm.sessions || vm.sessions.length == 0">
             No sessions here.
         </div>
