@@ -14,4 +14,4 @@ This can also serve as a backbone project for your SPA using angular and Typescr
 Why Typescript?
 ===============
 
-I consider typescript to be the best path for C# coders to get their foot in the door with javascript programming.  While javascript is valid typescript, it introduces concepts that make javascript programming 
+I consider typescript to be the best path for C# coders to get their foot in the door with javascript programming.  While javascript is valid typescript, it introduces concepts that make javascript programming easier to "get" as a .net developer.
