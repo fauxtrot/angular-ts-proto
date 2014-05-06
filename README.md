@@ -15,3 +15,9 @@ Why Typescript?
 ===============
 
 I consider typescript to be the best path for C# coders to get their foot in the door with javascript programming.  While javascript is valid typescript, it introduces concepts that make javascript programming easier to "get" as a .net developer.
+
+What's Next?
+============
+After reading about functionality at the type.litesolutions.net site, I'm interested in integrating them into this project to streamline creating new objects with appropriate interfaces.
+
+[http://type.litesolutions.net/](http://type.litesolutions.net/)
