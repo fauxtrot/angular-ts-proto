@@ -1,4 +1,4 @@
-﻿import userModule = require('Controllers/UserModule');
+﻿///<reference path="../Model/TypeLite1.d.ts" />
 
 
 export interface ISessionDetailScope extends ng.IScope {
@@ -78,7 +78,7 @@ export interface SessionObject extends ng.resource.IResourceClass<SessionObject>
     TrackName: string;
     SessionDateTime: Date;
     Description: string;
-    LikedByUsers: Array<userModule.UserInfo>;
+    LikedByUsers: Array<DataAccess.Model.UserInfo>;
 
     $secureSave: Function;
     SessionDate: Date;

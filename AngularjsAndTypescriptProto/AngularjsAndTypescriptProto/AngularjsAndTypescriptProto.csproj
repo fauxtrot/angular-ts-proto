@@ -175,6 +175,12 @@
     </Reference>
     <Reference Include="System.Net.Http.WebRequest">
     </Reference>
+    <Reference Include="TypeLite">
+      <HintPath>..\packages\TypeLite.0.9.1.6\lib\net4\TypeLite.dll</HintPath>
+    </Reference>
+    <Reference Include="TypeLite.Net4">
+      <HintPath>..\packages\TypeLite.0.9.1.6\lib\net4\TypeLite.Net4.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -213,6 +219,15 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="App\Directive\coreDirectives.ts" />
+    <Content Include="App\Model\TypeLite.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TypeLite1.d.ts</LastGenOutput>
+    </Content>
+    <Content Include="App\Model\TypeLite1.d.ts">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TypeLite.tt</DependentUpon>
+    </Content>
     <Content Include="Views\Template\AddSessionButton.cshtml" />
     <TypeScriptCompile Include="App\Controllers\commentModule.ts" />
     <Content Include="Views\Template\SessionDetail.cshtml" />
@@ -559,7 +574,6 @@
     <Content Include="Scripts\version.json" />
     <TypeScriptCompile Include="App\Controllers\CamperHomeModule.ts" />
     <TypeScriptCompile Include="App\Controllers\MainModule.ts" />
-    <TypeScriptCompile Include="App\Controllers\UserModule.ts" />
     <TypeScriptCompile Include="App\app.ts" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\themes\base\jquery-ui.css" />

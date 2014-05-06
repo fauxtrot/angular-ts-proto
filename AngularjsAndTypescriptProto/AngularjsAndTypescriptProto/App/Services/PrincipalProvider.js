@@ -20,6 +20,9 @@ define(["require", "exports"], function(require, exports) {
             if (PrincipalProviderService._instance == null) {
                 PrincipalProviderService._instance = new PrincipalProviderService($resource, $rootScope);
                 PrincipalProviderService._instance._currentPrincipal = PrincipalProviderService._instance.GetResource();
+                PrincipalProviderService._instance._currentPrincipal.then(function (val) {
+                    PrincipalProviderService._instance._currentPrincipal = val;
+                });
             }
             return PrincipalProviderService._instance;
         };

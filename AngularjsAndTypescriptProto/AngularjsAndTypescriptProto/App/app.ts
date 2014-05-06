@@ -15,7 +15,6 @@ import sessionModule = require('Controllers/SessionModule');
 import testModule = require('Controllers/TestModule');
 import accountModule = require('Controllers/AccountModule');
 import controls = require('Directive/sessionControl');
-import userModle = require('Controllers/UserModule');
 import principalModule = require('Services/PrincipalProvider');
 import commentModule = require('Controllers/commentModule');
 import coreDirectives = require('Directive/coreDirectives');

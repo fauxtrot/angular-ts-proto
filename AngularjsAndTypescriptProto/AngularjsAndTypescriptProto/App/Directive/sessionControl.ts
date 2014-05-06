@@ -1,5 +1,4 @@
 ﻿///<reference path="..\..\Scripts\typings\angularjs\angular.d.ts" />
-import userModule = require('../Controllers/UserModule');
 import principalProvider = require('../Services/PrincipalProvider');
 import sessionModule = require('../Controllers/SessionModule');
 
@@ -67,12 +66,13 @@ export class sessionControlController {
 
     checkLikeAbility(): ng.IPromise<boolean> {
         var sess = this.session;
-        var prin = this.principal;
+        //var _prin = this.principal;
         var q = this.qService;
-        return q.when(prin).then(function (prin) {
+        
+        return q.when(this.principal.CurrentPrincipal).then(function (prin) {
             for (var index in sess.LikedByUsers) {
                 var ui = sess.LikedByUsers[index];
-                if (prin.CurrentPrincipal.PrincipalType == principalProvider.PrincipalTypes.Anonymous || (ui.ProviderUserKey == prin.CurrentPrincipal.Id && ui.UserName == prin.CurrentPrincipal.Username)) {
+                if (prin.PrincipalType == principalProvider.PrincipalTypes.Anonymous || (ui.ProviderUserKey == prin.Id && ui.Username == prin.Username)) {
                     return false;
                 }
             }

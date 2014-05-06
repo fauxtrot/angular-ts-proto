@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nextwave.Neo4J.Membership.Data;
+using TypeLite;
 
 
 namespace DataAccess.Model
 {
+    [TsClass]
     public class Session
     {
         public int Id { get; set; }

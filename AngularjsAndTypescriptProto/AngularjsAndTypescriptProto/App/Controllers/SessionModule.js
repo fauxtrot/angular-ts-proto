@@ -1,4 +1,7 @@
-﻿define(["require", "exports"], function(require, exports) {
+﻿///<reference path="../Model/TypeLite1.d.ts" />
+define(["require", "exports"], function(require, exports) {
+    
+
     var SessionDetailController = (function () {
         function SessionDetailController($scope, $routeParams, srf) {
             $scope.vm = this;

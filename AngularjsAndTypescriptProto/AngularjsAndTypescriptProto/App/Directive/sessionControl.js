@@ -45,12 +45,14 @@
 
         sessionControlController.prototype.checkLikeAbility = function () {
             var sess = this.session;
-            var prin = this.principal;
+
+            //var _prin = this.principal;
             var q = this.qService;
-            return q.when(prin).then(function (prin) {
+
+            return q.when(this.principal.CurrentPrincipal).then(function (prin) {
                 for (var index in sess.LikedByUsers) {
                     var ui = sess.LikedByUsers[index];
-                    if (prin.CurrentPrincipal.PrincipalType == 1 /* Anonymous */ || (ui.ProviderUserKey == prin.CurrentPrincipal.Id && ui.UserName == prin.CurrentPrincipal.Username)) {
+                    if (prin.PrincipalType == 1 /* Anonymous */ || (ui.ProviderUserKey == prin.Id && ui.Username == prin.Username)) {
                         return false;
                     }
                 }

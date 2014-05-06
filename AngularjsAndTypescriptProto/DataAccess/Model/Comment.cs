@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TypeLite;
 
 namespace DataAccess.Model
 {
+    [TsClass]
     public class Comment
     {
         public string Subject { get; set; }

@@ -1,13 +1,12 @@
 ﻿///<reference path="SessionModule.ts" />
 
-import userModule = require('Controllers/UserModule');
 import sessionModule = require('Controllers/SessionModule');
 
 export interface CommentObject extends ng.resource.IResourceClass<CommentObject>{
     Subject: string
     Body: string
-    MadeBy: userModule.UserInfo
-    LikedBy: Array<userModule.UserInfo>
+    MadeBy: DataAccess.Model.UserInfo
+    LikedBy: Array<DataAccess.Model.UserInfo>
     Id: number
     //generated functions from resource call.
     $like: Function
