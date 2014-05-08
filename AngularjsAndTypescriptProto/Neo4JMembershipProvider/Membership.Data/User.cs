@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nextwave.Neo4J.Membership.Interfaces;
 
 namespace Nextwave.Neo4J.Membership.Data
 {   
-    public class User 
+    public class User : INodeItem
     {
         public string Username { get; set; }
         public string Email { get; set; }

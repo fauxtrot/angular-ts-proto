@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Security;
 using DataAccess.Model;
 
 namespace AngularjsAndTypescriptProto.Controllers
@@ -19,9 +20,14 @@ namespace AngularjsAndTypescriptProto.Controllers
         }
 
         // POST api/<controller>
-        public void Post([FromBody]Comment value)
+        [Route("api/Comment/On/{nodeId:int}")]
+        public Comment Post([FromBody]Comment value, int nodeId)
         {
-            //new comment
+            var dal = new DataAccess.Neo4JCamperDataAccess();
+            var session = dal.GetSessionById(nodeId);
+            var user = Membership.GetUser();
+            return dal.AddCommentToSession(session, (int)user.ProviderUserKey, value);
+            
         }
 
         // PUT api/<controller>/5

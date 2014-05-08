@@ -1,7 +1,7 @@
 ﻿///<reference path="../Scripts/typings/angularjs/angular.d.ts"/>
 ///<reference path="../Scripts/typings/angularjs/angular-route.d.ts"/>
 ///<reference path="../Scripts/typings/angularjs/angular-sanitize.d.ts" />
-define(["require", "exports", 'Controllers/MainModule', 'Controllers/CamperHomeModule', 'Controllers/SessionModule', 'Controllers/TestModule', 'Controllers/AccountModule', 'Directive/sessionControl', 'Services/PrincipalProvider', 'Controllers/commentModule', 'Directive/coreDirectives'], function(require, exports, mainController, camperHome, sessionModule, testModule, accountModule, controls, principalModule, commentModule, coreDirectives) {
+define(["require", "exports", 'Controllers/MainModule', 'Controllers/CamperHomeModule', 'Controllers/SessionModule', 'Controllers/TestModule', 'Controllers/AccountModule', 'Directive/sessionControl', 'Services/PrincipalProvider', 'Controllers/commentModule', 'Directive/commentControl', 'Directive/coreDirectives'], function(require, exports, mainController, camperHome, sessionModule, testModule, accountModule, controls, principalModule, commentModule, commentControls, coreDirectives) {
     var BootStrapper = (function () {
         function BootStrapper() {
             this.setupRouting = function (codeCamperApp) {
@@ -57,6 +57,8 @@ define(["require", "exports", 'Controllers/MainModule', 'Controllers/CamperHomeM
                 codeCamperApp.directive('sessionitem', function () {
                     return controls.sessionControl.Directive(qService);
                 });
+                codeCamperApp.directive('commentitem', commentControls.CommentDirective.DirectiveProvider);
+                codeCamperApp.directive('likable', ['$http', 'currentPrincipal', coreDirectives.LikableDirective.Directive]);
             };
         }
         BootStrapper.prototype.init = function () {

@@ -21,8 +21,13 @@
     </div>
     <div>
         <h4>Comments</h4>
+        
         <div ng-controller="commentController">
-            
+            <hr/>
+            <div ng-repeat="comment in vm.comments">
+                <div commentitem comment="comment" nodeid="$parent.$parent.vm.session.Id"></div>
+            </div>
+            <button class="btn" ng-click="vm.addComment()">Add Comment</button>
         </div>
     </div>
 </div>

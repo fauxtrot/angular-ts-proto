@@ -15,6 +15,9 @@ namespace DataAccess
         void AddSession(Session session, long userKey);
         void LikeSession(Session session, int id);
         IEnumerable<Comment> GetCommentsForSession(int id);
-        void AddCommentToSession(Session session, int id, Comment comment);
+        Comment AddCommentToSession(Session session, int id, Comment comment);
+        void LikeNode(int nodeId, int id);
+        void UnLikeNode(int nodeId, int id);
+        IEnumerable<UserInfo> GetLikedByList(int nodeId);
     }
 }

@@ -1014,7 +1014,6 @@ namespace Nextwave.Neo4J.Membership
         }
 
 
-
         //
         // MembershipProvider.DeleteUser
         //

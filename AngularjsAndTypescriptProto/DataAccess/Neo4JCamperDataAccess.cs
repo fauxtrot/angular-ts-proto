@@ -18,7 +18,7 @@ namespace DataAccess
             client.Connect();
 
             var list = client.Cypher
-                  .Match("(s)-[r:Liked_By]->(u)")
+                  .Match("(s:Session)-[r:Liked_By]->(u)")
                   .Return(
                       (s, r, u) =>
                        new { Session = s.As<Session>(), SessId = s.Id(), Users = u.CollectAsDistinct<UserInfo>() })
@@ -94,13 +94,23 @@ namespace DataAccess
 
             client.Connect();
 
-            var result = client.Cypher.Start(new {s = string.Format("node({0})", id)})
-                               .Match("(c)-[:On_Session]->(s)")
-                               .Return(c => c.As<Comment>()).Results;
+            var result = client.Cypher.Start(new { s = string.Format("node({0})", id) })
+                               .Match("(u:User)<-[mb:Created_By]-(c:Comment)-[o:On_Item]->(s:Session)")
+                               .Merge("(c)-[lb:Liked_By]->(lbu:User)")
+                               .Return((u, mb, c, s, o, lbu) => new { Comment = c.As<Comment>(), MadeByUser = u.Node<UserInfo>(), CommentNodeId = c.Id(), LikedByUsers = lbu.CollectAs<UserInfo>() })
+                               .Results.Select(x =>
+                               {
+                                   x.Comment.MadeBy = x.MadeByUser.Data;
+                                   x.Comment.MadeBy.NodeId = (int)x.MadeByUser.Reference.Id;
+                                   x.Comment.MadeBy.ProviderUserKey = x.MadeByUser.Reference.Id;
+                                   x.Comment.Id = (int)x.CommentNodeId;
+                                   x.Comment.LikedBy = x.LikedByUsers.Select(ui => new UserInfo { Username = ui.Data.Username, ProviderUserKey = ui.Reference.Id, NodeId = (int)ui.Reference.Id }).ToList();
+                                   return x.Comment;
+                               });
             return result.ToList();
         }
 
-        public void AddCommentToSession(Session session, int id, Comment comment)
+        public Comment AddCommentToSession(Session session, int id, Comment comment)
         {
             var client = new GraphClient(new Uri("http://localhost:7474/db/data"));
 
@@ -123,6 +133,50 @@ namespace DataAccess
                                     .Return(s => s.Node<Session>()).Results.Single();
 
             client.CreateRelationship(result.Reference, new OnSession(sessionNode.Reference));
+            result.Data.Id = (int)result.Reference.Id;
+            result.Data.MadeBy = userNode.Data.AsType<UserInfo>();
+            result.Data.MadeBy.NodeId = (int) result.Data.MadeBy.ProviderUserKey;
+            return result.Data;
+        }
+
+        public void LikeNode(int nodeId, int id)
+        {
+            var client = new GraphClient(new Uri("http://localhost:7474/db/data"));
+
+            client.Connect();
+
+            var q = client.Cypher.Start(new {n = string.Format("node({0})", nodeId)})
+                  .Match("(u:User)")
+                  .Where((User u) => u.ProviderUserKey == id)
+                  .Create("(n)-[:Liked_By]->(u)");
+            var res = q.Return(u => u.As<UserInfo>()).Results;
+        }
+
+        public IEnumerable<UserInfo> GetLikedByList(int nodeId)
+        {
+             var client = new GraphClient(new Uri("http://localhost:7474/db/data"));
+
+            client.Connect();
+
+            var results = client.Cypher.Start(new {n = string.Format("node({0})", nodeId)})
+                  .Match("(n)-[:Liked_By]->(u:User)")
+                  .Return(u => u.As<UserInfo>()).Results;
+
+            return results;
+
+        }
+
+        public void UnLikeNode(int nodeId, int id)
+        {
+            var client = new GraphClient(new Uri("http://localhost:7474/db/data"));
+
+            client.Connect();
+            client.Cypher.Start(new {n = string.Format("node({0})", nodeId)})
+                  .Match("(u:User)")
+                  .Where((User u) => u.ProviderUserKey == id)
+                  .Merge("(n)-[r:Liked_By]->(u:User)")
+                  .Delete("r")
+                  .ExecuteWithoutResults();
         }
     }
 }

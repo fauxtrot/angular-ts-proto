@@ -37,13 +37,12 @@ namespace CarolinaCodeCamperApp.Controllers
             var user = Membership.GetUser();
             if (user != null && user.ProviderUserKey != null)
             {
-                var id = (int)user.ProviderUserKey;
+                var id = (int) user.ProviderUserKey;
                 dal.LikeSession(session, id);
             }
-            
+
         }
 
-       
         [System.Web.Mvc.Authorize]
         [AntiForgeryValidate]
         public ActionResult SuperSecret()

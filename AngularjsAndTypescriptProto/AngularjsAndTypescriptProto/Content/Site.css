@@ -1,4 +1,8 @@
-﻿   
+﻿.commentitem {
+    border-radius: 5px;
+    background-color: #fff;
+    padding: .5em;
+}   
     
     /* login page */
     #loginForm {

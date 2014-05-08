@@ -17,6 +17,7 @@ import accountModule = require('Controllers/AccountModule');
 import controls = require('Directive/sessionControl');
 import principalModule = require('Services/PrincipalProvider');
 import commentModule = require('Controllers/commentModule');
+import commentControls = require('Directive/commentControl');
 import coreDirectives = require('Directive/coreDirectives');
 
 interface ICCAppRootScope extends ng.IRootScopeService {
@@ -117,7 +118,8 @@ class BootStrapper {
         codeCamperApp.controller('commentController', commentModule.CommentController);
 
         codeCamperApp.directive('sessionitem', function () { return controls.sessionControl.Directive(qService); });
-
+        codeCamperApp.directive('commentitem', commentControls.CommentDirective.DirectiveProvider);
+        codeCamperApp.directive('likable', ['$http', 'currentPrincipal', coreDirectives.LikableDirective.Directive]);
     };
 
 }

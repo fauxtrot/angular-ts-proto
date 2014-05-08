@@ -19,7 +19,7 @@ namespace DataAccess.Model.Relationships
 
         public override string RelationshipTypeKey
         {
-            get { return "On_Session"; }
+            get { return "On_Item"; }
         }
     }
 }

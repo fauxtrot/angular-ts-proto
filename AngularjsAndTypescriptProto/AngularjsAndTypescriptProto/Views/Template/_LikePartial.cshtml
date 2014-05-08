@@ -1,0 +1,9 @@
+﻿@{
+    Layout = null;
+}
+<hr />
+<button class='btn btn-xs' ng-disable="isBusy" ng-click='like()'><i class='glyphicon glyphicon-thumbs-up' /></button>&nbsp;
+
+<span ng-bind="LikedBy? 'Liked By: ' : 'Not Liked By Anyone '"></span><span ng-repeat="lb in LikedBy">
+                                                                          <span ng-bind="lb.Username"></span><span ng-if="!$last" ng-bind=" ',' "></span>
+                                                                      </span>

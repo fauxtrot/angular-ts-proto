@@ -1,19 +1,15 @@
-﻿///<reference path="SessionModule.ts" />
-
-import sessionModule = require('Controllers/SessionModule');
+﻿import sessionModule = require('Controllers/SessionModule');
 
 export interface CommentObject extends ng.resource.IResourceClass<CommentObject>{
-    Subject: string
-    Body: string
-    MadeBy: DataAccess.Model.UserInfo
-    LikedBy: Array<DataAccess.Model.UserInfo>
-    Id: number
+
     //generated functions from resource call.
+    isEditing: boolean
     $like: Function
-    $save: Function
+    //$save: Function
+    $commentOn: Function
 }
 
-export interface ICommentControllerScope {
+export interface ICommentControllerScope extends ng.IScope{
     vm: CommentController;
     $parent: sessionModule.ISessionDetailScope;
 }
@@ -21,12 +17,15 @@ export interface ICommentControllerScope {
 export class CommentController {
     static $inject = ['$scope', 'commentResourceFactory']
 
-    comments: Array<CommentObject>;
-    crf: ng.resource.IResourceClass<CommentObject>;
+    comments: Array<any>;
+    crf:  CommentObject;
 
     isBusy: boolean;
-    constructor($scope: ICommentControllerScope, crf: ng.resource.IResourceClass<CommentObject>) {
+    constructor($scope: ICommentControllerScope, crf: CommentObject) {
         $scope.vm = this;
+        $scope.$watch('vm.comments', function (newVal) {
+            console.log(newVal);
+        });
         this.crf = crf;
         this.isBusy = true;
         this.getComments($scope.$parent.id);
@@ -36,7 +35,12 @@ export class CommentController {
         this.comments = this.crf.query({ id: sessionId }); 
     }
 
+    addComment() {
+        var cmt = new this.crf();
+        cmt.isEditing = true;
+        this.comments.push(cmt);
 
+    }
 } 
 
 export class CommentResourceFactory {
@@ -50,11 +54,11 @@ export class CommentResourceFactory {
     }
 
 
-    public GetCommentResourceService(): ng.resource.IResourceClass<CommentObject> {
-        return this._resource<CommentObject>('/api/Comment/:id', { id: "@id" },
+    public GetCommentResourceService(): ng.resource.IResourceClass<DataAccess.Model.Comment> {
+        return this._resource<DataAccess.Model.Comment>('/api/Comment/:id', { id: "@id" },
             {
-                save : { method: 'POST', headers: { 'Content-Type': 'application/json' }, withCredentials: true }
-                , like: { method: 'POST', url: '/Home/LikeComment', headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+                //save: { method: 'POST', headers: { 'Content-Type': 'application/json' }, withCredentials: true },
+                commentOn: { url: '/api/Comment/On/', params: { nodeId: '@nodeId' }, method: 'POST', headers: { 'Content-Type': 'application/json' }, withCredentials: true }
             });
     }
 }

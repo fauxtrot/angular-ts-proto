@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Nextwave.Neo4J.Membership.Interfaces;
 
 namespace AngularjsAndTypescriptProto.Helpers
 {

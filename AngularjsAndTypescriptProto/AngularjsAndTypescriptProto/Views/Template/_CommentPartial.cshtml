@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+}
+
+<div ng-show="comment.isEditing" class="commentitem">
+    <form class="form-horizontal" ng-submit="submitComment()">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>Create Comment</legend>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="subject">Subject</label>
+                <div class="col-md-4">
+                    <input id="subject" name="subject" type="text" placeholder="" class="form-control" ng-model="comment.Subject">
+                </div>
+            </div>
+
+            <!-- Textarea -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="body">Comment</label>
+                <div class="col-md-4">
+                    <textarea class="form-control" id="body" name="body" ng-model="comment.Body"></textarea>
+                </div>
+            </div>
+
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="save"></label>
+                <div class="col-md-4">
+                    <button id="save" type="submit" name="save" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
+</div>
+<div ng-hide="comment.isEditing">
+    <!--Static Template -->
+    <div class="commentitem">
+        <header>
+            <h3>
+                {{comment.MadeBy.Username}}
+                <small> &mdash; {{comment.Subject}}</small>
+            </h3>
+
+        </header>
+        <div ng-bind="comment.Body">
+        </div>
+        <div ng-if="!(comment.isEditing)">
+            <div likable objectid="comment.Id" />
+        </div>
+
+    </div>
+</div>
+<hr />
