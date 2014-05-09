@@ -96,7 +96,7 @@ namespace DataAccess
 
             var result = client.Cypher.Start(new { s = string.Format("node({0})", id) })
                                .Match("(u:User)<-[mb:Created_By]-(c:Comment)-[o:On_Item]->(s:Session)")
-                               .Merge("(c)-[lb:Liked_By]->(lbu:User)")
+                               .OptionalMatch("(c)-[lb:Liked_By]->(lbu:User)")
                                .Return((u, mb, c, s, o, lbu) => new { Comment = c.As<Comment>(), MadeByUser = u.Node<UserInfo>(), CommentNodeId = c.Id(), LikedByUsers = lbu.CollectAs<UserInfo>() })
                                .Results.Select(x =>
                                {
@@ -145,11 +145,11 @@ namespace DataAccess
 
             client.Connect();
 
-            var q = client.Cypher.Start(new {n = string.Format("node({0})", nodeId)})
-                  .Match("(u:User)")
-                  .Where((User u) => u.ProviderUserKey == id)
-                  .Create("(n)-[:Liked_By]->(u)");
-            var res = q.Return(u => u.As<UserInfo>()).Results;
+            client.Cypher
+                .Start(new { n = string.Format("node({0})", nodeId) })
+                .Match("(u:User {ProviderUserKey : {id}})")
+                .WithParam("id", id)
+                .Create("(n)-[:Liked_By]->(u)").ExecuteWithoutResults();	
         }
 
         public IEnumerable<UserInfo> GetLikedByList(int nodeId)
